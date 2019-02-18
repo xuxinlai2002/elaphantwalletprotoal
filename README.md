@@ -71,67 +71,95 @@ AppName=redpacket
 ```
 // 1.登录的二维码数据内容
 {
-    CallbackUrl         string   // 协议名，钱包用来区分不同协议，本协议为 ElephantWallet
-    ReturnUrl           string   // 协议版本信息，如1.0
-    Description         string   // dapp名字
-    AppID               string   // dapp图标 
-    PublicKey           string   // 赋值为login
-    Signature           string   // dapp server生成的，用于此次登录验证的唯一标识   
-    DID                 string   // dapp server上用于接受登录验证信息的url
-    RandomNumber        number   // 二维码过期时间，unix时间戳
-    AppName             string   // 登录备注信息，钱包用来展示，可选
+    CallbackUrl     	String  //授权请求地址
+	ReturnUrl         	String  //授权成功后回调地址
+	Description      	String  //描述
+	AppID               String  //平台授权AppID
+	PublicKey         	String  //公钥
+	Signature        	String  //加密密文
+	DID                 String  //平台DID
+	RandomNumber  		int   	//随机数
+	AppName          	String  //应用名称
 }
 ```
 
 - 钱包对登录相关数据进行签名
 ```
-// 生成sign算法
-let data = timestamp + account + uuID + ref     //ref为钱包名，标示来源
-sign = ecc.sign(data, privateKey)
+利用私钥对AppID加密，函数如下: 
+ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
+
+//传参
+	privateKey  String 	//ELA 私钥
+	data  		data 	//密文内容
+	len  		int 	//密文内容长度
+	signedData 	data 	//输出密文
 ```
 
-- 钱包将签名后的数据POST到dapp提供的loginUrl，请求登录验证
+- 钱包将签名后的数据POST到dapp提供的CallbackUrl，请求登录验证
 ```
- // 请求登录验证的数据格式
+ // 请求登录验证的数据格式（最终将下面reqJson数据提交）
+ reqJsonData 数据如下：
 {
-    protocol   string     // 协议名，钱包用来区分不同协议，本协议为 ElephantWallet
-    version    string     // 协议版本信息，如1.0
-    timestamp  number     // 当前UNIX时间戳
-    sign       string     // Elastos签名
-    uuID       string     // dapp server生成的，用于此次登录验证的唯一标识     
-    account    string     // Elastos账户名
-    ref        string     // 来源,如钱包名
+	ELAAddress  	String  //ELA地址
+ 	NickName   		String  //昵称
+}
+                       
+reqJson 数据如下：        
+{
+    Data       	string   // reqJsonData Json字符串
+    Sign    	string   // reqJsonData 数据进行钱包相关数据签名
+    PublicKey  	string   // 公钥
 }
 ```
-- dapp server收到数据，验证sign签名数据，并返回结果code；若验证成功，则在dapp的业务逻辑中，将该用户设为已登录状态
+- 成功回调ReturnUrl
   
-```
-// 错误返回 
-{
-    code number     //错误符，等于0是成功，大于0说明请求失败，dapp返回具体的错误码
-    error string    //返回的提示信息
-}
 
-```
 #### 场景2：dapp的移动端应用拉起钱包App，请求登录授权
 > 	适合dapp的移动端(iOS或安卓端）接入。业务流程图如下：
 
-![image](http://on-img.com/chart_image/5b6591fbe4b0edb750f9a364.png?t=1)
+![image](images/case-app-login.png)
 - dapp的移动端拉起钱包APP要求登录授权，并传递给钱包App如下的数据，数据格式为json：
 ```
 // dapp传递给钱包APP的数据包结构
+{   
+    CallbackUrl         String  //授权请求地址
+    ReturnUrl           String  //授权成功后回调地址
+	Description         String  //备注描述
+	AppID               String  //平台授权AppID
+	PublicKey           String  //公钥
+	Signature        	String  //加密密文
+	DID                 String  //平台DID
+	RandomNumber  		int   	//随机数
+	AppName          	String  //应用名称
+    		        
+}
+```
+- 钱包对登录相关数据进行签名
+```
+利用私钥对AppID加密，函数如下: 
+ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
+
+//传参
+	privateKey  String 	//ELA 私钥
+	data  		data 	//密文内容
+	len  		int 	//密文内容长度
+	signedData 	data 	//输出密文
+```
+
+- 钱包将签名后的数据POST到dapp提供的CallbackUrl，请求登录验证
+```
+ // 请求登录验证的数据格式（最终将下面reqJson数据提交）
+ reqJsonData 数据如下：
 {
-    protocol	string   // 协议名，钱包用来区分不同协议，本协议为 ElephantWallet
-    version     string   // 协议版本信息，如1.0
-    dappName    string   // dapp名字，用于在钱包APP中展示
-    dappIcon    string   // dapp图标Url，用于在钱包APP中展示
-    action      string   // 赋值为login
-    uuID        string   // dapp生成的，用于dapp登录验证唯一标识   
-    loginUrl    string   // dapp server生成的，用于接受此次登录验证的URL 
-    loginMemo	string   // 登录的备注信息，钱包用来展示，可选
-    callback    string   // 用户完成操作后，钱包回调拉起dapp移动端的回调URL,如appABC://abc.com?action=login，可选
-    		         // 钱包回调时在此URL后加上操作结果(&result)，如：appABC://abc.com?action=login&result=1, 
-			 // result的值为：0为用户取消，1为成功,  2为失败
+	ELAAddress  	String  //ELA地址
+ 	NickName   		String  //昵称
+}
+                       
+reqJson 数据如下：        
+{
+    Data       	string   // reqJsonData Json字符串
+    Sign    	string   // reqJsonData 数据进行钱包相关数据签名
+    PublicKey  	string   // 公钥
 }
 ```
 - dapp server收到数据，验证sign签名数据，返回success == true或false；若验证成功，则在dapp的业务逻辑中，将该用户设为已登录状态
@@ -140,30 +168,35 @@ sign = ecc.sign(data, privateKey)
 #### 场景1：钱包扫描二维码进行支付
 > 业务流程图如下:
 
-![image](http://on-img.com/chart_image/5b6594bae4b053a09c24fa9a.png?t=1)
+![image](images/case-barcode-pay.png)
 
 ```
 // dapp生成的用于钱包扫描的二维码数据格式
 {
-	protocol    string   // 协议名，钱包用来区分不同协议，本协议为 ElephantWallet
-    	version     string   // 协议版本信息，如1.0
-	dappName    string   // dapp名字，用于在钱包APP中展示，可选
-    	dappIcon    string   // dapp图标Url，用于在钱包APP中展示，可选
-	action      string   // 支付时，赋值为transfer，必须
-	from        string   // 付款人的Elastos账号，可选
-	to          string   // 收款人的Elastos账号，必须
-	amount      number   // 转账数量，必须
-	contract    string   // 转账的token所属的contract账号名，必须
-	symbol      string   // 转账的token名称，必须
-	precision   number   // 转账的token的精度，小数点后面的位数，必须
-	dappData    string   // 由dapp生成的业务参数信息，需要钱包在转账时附加在memo中发出去，格式为:k1=v1&k2=v2，可选
-			     // 钱包转账时还可附加ref参数标明来源，如：k1=v1&k2=v2&ref=walletname
-	desc	    string   // 交易的说明信息，钱包在付款UI展示给用户，最长不要超过128个字节，可选			     
-	expired	    number   // 二维码过期时间，unix时间戳
-        callback    string   // 用户完成操作后，钱包回调拉起dapp移动端的回调URL,如https://abc.com?action=login&qrcID=123，可选
-    		             // 钱包回调时在此URL后加上操作结果(result、txID)，如：https://abc.com?action=login&qrcID=123&result=1&txID=xxx, 
-			     // result的值为：0为用户取消，1为成功,  2为失败；txID为Elastos主网上该笔交易的id（若有）
+	CallbackUrl		String  //回调地址
+	Description		String  //描述
+	AppID			String  //平台授权AppID
+	PublicKey		String  //公钥
+	Signature		String  //加密密文 （加密方式同上）
+	Serialnumber	int     //序号    
+	DID				String  //平台DID
+	RandomNumber	int   	//随机数
+	Name			String  //应用名称
+	CoinName		String 	//币种类
+	Amount			int  	//币数量
+	PaymentAddress	String 	//付款地址
 }
+```
+- 钱包对支付相关数据进行签名
+```
+利用私钥对AppID加密，函数如下: 
+ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
+
+//传参
+	privateKey  String 	//ELA 私钥
+	data  		data 	//密文内容
+	len  		int 	//密文内容长度
+	signedData 	data 	//输出密文
 ```
 - 钱包组装上述数据，生成一笔Elastos的transaction，用户授权此笔转账后，提交转账数据到Elastos主网；若有callback参数，则进行回调访问
 - dapp可根据callback中的txID去主网查询此笔交易（不能完全依赖此方式来确认用户的付款）；或dapp自行搭建节点监控Elastos主网，检查代币是否到账
@@ -174,28 +207,34 @@ sign = ecc.sign(data, privateKey)
 #### 场景2：dapp的移动端拉起钱包App，请求支付授权
 > 业务流程图如下：
 
-![image](http://on-img.com/chart_image/5b659391e4b0f8477da3138b.png?t=1)
+![image](images/case-app-pay.png)
 ```
 // 传递给钱包APP的数据包结构
 {
-	protocol    string   // 协议名，钱包用来区分不同协议，本协议为 ElephantWallet
-	version     string   // 协议版本信息，如1.0
-	action      string   // 支付时，赋值为transfer
-	dappName    string   // dapp名字，用于在钱包APP中展示，可选
-    	dappIcon    string   // dapp图标Url，用于在钱包APP中展示，可选	
-	from        string   // 付款人的Elastos账号，可选
-	to          string   // 收款人的Elastos账号，必须
-	amount      number   // 转账数量，必须
-	contract    string   // 转账的token所属的contract账号名	
-	symbol      string   // 转账的token名称，必须
-	precision   number   // 转账的token的精度，小数点后面的位数，必须	
-	dappData    string   // 由dapp生成的业务参数信息，需要钱包在转账时附加在memo中发出去，格式为:k1=v1&k2=v2，可选
-			     // 钱包转账时还可附加ref参数标明来源，如：k1=v1&k2=v2&ref=walletname
-	desc	    string   // 交易的说明信息，钱包在付款UI展示给用户，最长不要超过128个字节，可选			     
-        callback    string   // 用户完成操作后，钱包回调拉起dapp移动端的回调URL,如appABC://abc.com?action=login，可选
-    		             // 钱包回调时在此URL后加上操作结果(result、txID)，如：appABC://abc.com?action=login&result=1&txID=xxx, 
-			     // result的值为：0为用户取消，1为成功,  2为失败；txID为Elastos主网上该笔交易的id（若有）
+	CallbackUrl		String  //回调地址
+	Description		String  //描述
+	AppID			String  //平台授权AppID
+	PublicKey		String  //公钥
+	Signature		String  //加密密文 （加密方式同上）
+	Serialnumber	int     //序号
+	DID				String  //平台DID
+	RandomNumber	int   	//随机数
+	Name			String  //应用名称
+	CoinName		String 	//币种类
+	Amount			int  	//币数量
+	PaymentAddress	String 	//付款地址
 }
+```
+- 钱包对支付相关数据进行签名
+```
+利用私钥对AppID加密，函数如下: 
+ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
+
+//传参
+	privateKey  String 	//ELA 私钥
+	data  		data 	//密文内容
+	len  		int 	//密文内容长度
+	signedData 	data 	//输出密文
 ```
 - 钱包组装上述数据，生成一笔Elastos的transaction，用户授权此笔转账后，提交转账数据到Elastos主网；如果有callback，则回调拉起dapp的应用
 - dapp可根据callback里的txID去主网查询此笔交易（不能完全依赖此方式来确认用户的付款）；或自行搭建节点监控Elastos主网，检查代币是否到账
@@ -213,35 +252,7 @@ sign = ecc.sign(data, privateKey)
 
 ## FAQ
 
-* 如何避免用户扫描了伪造的二维码？
-
-  > 虽然可以通过创建一个统一的dapp和钱包注册中心，通过白名单的方式来避免钓鱼，但这会使此协议更复杂、更中心化，从而也更脆弱。我们建议钱包商在界面上提醒用户注意识别二维码的来源，提高用户的安全意识，同时向用户展示签名的原始信息。
-
-* 二维码的信息过多，可否增加压缩算法？
-
-  > 我们进行过测试，能压缩20-30%左右，效果不算特别理想，因此协议中没有将压缩算法正式纳入。虽然二维码看起来过密，但钱包基本均可正常识别。我们建议，如果二维码信息过多，dapp在展示二维码的时候，适当加大尺寸，让用户不必将手机凑近屏幕，提高钱包的识别速度。
-
-* 在验证登录信息的时候，dapp应该验证active还是owner的签名？
-
-  > 我们建议dapp先验证active的签名，若不通过，再验证owner。对于钱包商来说，建议用active权限来签名。
-
-* 对dapp内嵌到钱包里面的场景，ElephantWallet协议为何不制定相关登录和支付标准？
-
-  > 目前多数钱包均在开发或已开发出自己的一套相关标准，统一标准的代价很大。我们建议各钱包商也参考scatter的方案来，这样会大大降低在web端已经接入了scatter的dapp们的适配成本。
-
-* ElephantWallet协议为何不制定钱包和dapp之间的智能合约调用的标准？
-
-  > 同上。
-
 
 ## 更新说明
-- 9.6
-  增加了FAQ内容
-- 8.17 
-  增加测试链接；
-  支付操作中增加了callback参数；
-  修改两个字段的命名，expire->expired,callbackUrl->callback
-- 8.16 
-  修改dapp的应用调用钱包APP时的callback，钱包只需要附加result结果即可，无需拼装action参数
-- 8.15 
-  简化协议，取消info字段；增加desc字段，此字段是string类型，用来描述一个交易
+- 2.18
+  新建协议文档
