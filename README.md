@@ -76,7 +76,7 @@ AppName=redpacket
 	Description      	String  //描述
 	AppID               	String  //平台授权AppID
 	PublicKey         	String  //公钥
-	Signature        	String  //加密密文
+	Signature        	String  //签名
 	DID                 	String  //平台DID
 	RandomNumber  		int   	//随机数
 	AppName          	String  //应用名称
@@ -90,28 +90,28 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
 
 //传参
 {
-	privateKey  	String 	//ELA 私钥
-	data  		data 	//密文内容
-	len  		int 	//密文内容长度
-	signedData 	data 	//输出密文
+	privateKey  		String 	//ELA 私钥
+	data  			data 	//待签名内容
+	len  			int 	//待签名内容长度
+	signedData 		data 	//签名输出
 }
 ```
 
 - 钱包将签名后的数据POST到dapp提供的CallbackUrl，请求登录验证
 ```
-// 1.生成请求登录验证的数据格式（最终将下面reqJson数据提交）
+//1.生成请求登录验证的数据格式（最终将下面reqJson数据提交）
 reqJsonData 数据如下：
 {
-	ELAAddress  	String  //ELA地址
- 	NickName   	String  //昵称
+	ELAAddress  		String  //ELA地址
+ 	NickName   		String  //昵称
 }
          
 //2.对请求登录验证的数据进行进行签名，发送的CallbackUrl 
 reqJson 数据如下：        
 {
-    	Data       	string   // reqJsonData Json字符串
-    	Sign    	string   // reqJsonData 数据进行钱包相关数据签名
-    	PublicKey  	string   // 公钥
+    	Data       		string   // reqJsonData Json字符串
+    	Sign    		string   // reqJsonData 数据进行钱包相关数据签名
+    	PublicKey  		string   // 公钥
 }
 ```
 - 成功回调ReturnUrl
@@ -125,15 +125,15 @@ reqJson 数据如下：
 ```
 // dapp传递给钱包APP的数据包结构
 {   
-    	CallbackUrl	String  //授权请求地址
-    	ReturnUrl	String  //授权成功后回调地址
-	Description	String  //备注描述
-	AppID		String  //平台授权AppID
-	PublicKey	String  //公钥
-	Signature	String  //加密密文
-	DID		String  //平台DID
-	RandomNumber	int   	//随机数
-	AppName		String  //应用名称
+    	CallbackUrl		String  //授权请求地址
+    	ReturnUrl		String  //授权成功后回调地址
+	Description		String  //备注描述
+	AppID			String  //平台授权AppID
+	PublicKey		String  //公钥
+	Signature		String  //签名
+	DID			String  //平台DID
+	RandomNumber		int   	//随机数
+	AppName			String  //应用名称
     		        
 }
 ```
@@ -144,29 +144,32 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
 
 //传参
 {
-	privateKey	String 	//ELA 私钥
-	data  		data 	//密文内容
-	len  		int 	//密文内容长度
-	signedData 	data 	//输出密文
+	privateKey		String 	//ELA 私钥
+	data  			data 	//待签名内容
+	len  			int 	//待签名内容长度
+	signedData 		data 	//签名输出
+
 }
 ```
 
 - 钱包将签名后的数据POST到dapp提供的CallbackUrl，请求登录验证
 ```
- // 请求登录验证的数据格式（最终将下面reqJson数据提交）
- reqJsonData 数据如下：
+//1.生成请求登录验证的数据格式（最终将下面reqJson数据提交）
+reqJsonData 数据如下：
 {
-	ELAAddress  	String  //ELA地址
- 	NickName   	String  //昵称
+	ELAAddress  		String  //ELA地址
+ 	NickName   		String  //昵称
 }
-                       
+         
+//2.对请求登录验证的数据进行进行签名，发送的CallbackUrl 
 reqJson 数据如下：        
 {
-    	Data       	string   // reqJsonData Json字符串
-    	Sign    	string   // reqJsonData 数据进行钱包相关数据签名
-    	PublicKey  	string   // 公钥
+    	Data       		string   // reqJsonData Json字符串
+    	Sign    		string   // reqJsonData 数据进行钱包相关数据签名
+    	PublicKey  		string   // 公钥
 }
 ```
+
 - dapp server收到数据，验证sign签名数据，返回success == true或false；若验证成功，则在dapp的业务逻辑中，将该用户设为已登录状态
 
 ### 3. 支付
@@ -182,7 +185,7 @@ reqJson 数据如下：
 	Description		String  //描述
 	AppID			String  //平台授权AppID
 	PublicKey		String  //公钥
-	Signature		String  //加密密文 （加密方式同上）
+	Signature		String  //签名
 	Serialnumber		int     //序号    
 	DID			String  //平台DID
 	RandomNumber		int   	//随机数
@@ -198,14 +201,16 @@ reqJson 数据如下：
 ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
 
 //传参
-	privateKey  	String 	//ELA 私钥
-	data  		data 	//密文内容
-	len  		int 	//密文内容长度
-	signedData 	data 	//输出密文
+{
+	privateKey  		String 	//ELA 私钥
+	data  			data 	//待签名内容
+	len  			int 	//待签名内容
+	signedData 		data 	//签名输出
+}
 ```
 - 钱包组装上述数据，生成一笔Elastos的transaction，用户授权此笔转账后，提交转账数据到Elastos主网；若有callback参数，则进行回调访问
 - dapp可根据callback中的txID去主网查询此笔交易（不能完全依赖此方式来确认用户的付款）；或dapp自行搭建节点监控Elastos主网，检查代币是否到账
-- 对于流行币种如IQ，如果二维码中给出的contract名和官方的合约名不一致，钱包方要提醒用户，做二次确认
+- 对于流行币种，如果二维码中给出的contract名和官方的合约名不一致，钱包方要提醒用户，做二次确认
 - 钱包应该提醒用户注意辨别二维码的来源，避免被钓鱼攻击
 
 
@@ -220,7 +225,7 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
 	Description		String  //描述
 	AppID			String  //平台授权AppID
 	PublicKey		String  //公钥
-	Signature		String  //加密密文 （加密方式同上）
+	Signature		String  //签名
 	Serialnumber		int     //序号
 	DID			String  //平台DID
 	RandomNumber		int   	//随机数
@@ -236,10 +241,12 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
 ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
 
 //传参
-	privateKey  	String 	//ELA 私钥
-	data  		data 	//密文内容
-	len  		int 	//密文内容长度
-	signedData 	data 	//输出密文
+{
+	privateKey  		String 	//ELA 私钥
+	data  			data 	//密文内容
+	len  			int 	//密文内容长度
+	signedData 		data 	//输出密文
+}
 ```
 - 钱包组装上述数据，生成一笔Elastos的transaction，用户授权此笔转账后，提交转账数据到Elastos主网；如果有callback，则回调拉起dapp的应用
 - dapp可根据callback里的txID去主网查询此笔交易（不能完全依赖此方式来确认用户的付款）；或自行搭建节点监控Elastos主网，检查代币是否到账
@@ -250,7 +257,7 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
 ```
 // 错误返回 
 {
-    code number     //错误符，等于0是成功，大于0说明请求失败，dapp返回具体的错误码
+    code number     //错误符，等于0是成功，不等于0说明请求失败，dapp返回具体的错误码
     error string    //返回的提示信息
 }
 ```
