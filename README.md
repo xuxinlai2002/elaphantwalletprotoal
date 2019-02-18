@@ -61,33 +61,35 @@ AppName=redpacket
  
 
 #### 场景1：使用钱包扫码二维码登录
-> 	适合dapp的网站接入。
+> 	适合第三方网站接入。
 > 
 > 业务流程图如下：
 
 ![image](images/case-barcode-login.png)
 
-- dapp生成二维码，钱包扫描dapp web提供的登录二维码，此二维码的数据格式为json，包含以下数据：
+- web前端生成二维码，钱包扫描web提供的登录二维码，此二维码的数据，包含以下数据：
 ```
-// 登录的二维码数据格式
+// 1.登录的二维码数据内容
 {
-    protocol	string   // 协议名，钱包用来区分不同协议，本协议为 ElephantWallet
-    version     string   // 协议版本信息，如1.0
-    dappName    string   // dapp名字
-    dappIcon    string   // dapp图标 
-    action      string   // 赋值为login
-    uuID        string   // dapp server生成的，用于此次登录验证的唯一标识   
-    loginUrl    string   // dapp server上用于接受登录验证信息的url
-    expired	number   // 二维码过期时间，unix时间戳
-    loginMemo	string   // 登录备注信息，钱包用来展示，可选
+    CallbackUrl         string   // 协议名，钱包用来区分不同协议，本协议为 ElephantWallet
+    ReturnUrl           string   // 协议版本信息，如1.0
+    Description         string   // dapp名字
+    AppID               string   // dapp图标 
+    PublicKey           string   // 赋值为login
+    Signature           string   // dapp server生成的，用于此次登录验证的唯一标识   
+    DID                 string   // dapp server上用于接受登录验证信息的url
+    RandomNumber        number   // 二维码过期时间，unix时间戳
+    AppName             string   // 登录备注信息，钱包用来展示，可选
 }
 ```
+
 - 钱包对登录相关数据进行签名
 ```
 // 生成sign算法
 let data = timestamp + account + uuID + ref     //ref为钱包名，标示来源
 sign = ecc.sign(data, privateKey)
 ```
+
 - 钱包将签名后的数据POST到dapp提供的loginUrl，请求登录验证
 ```
  // 请求登录验证的数据格式
