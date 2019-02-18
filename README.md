@@ -71,7 +71,7 @@ AppName=redpacket
 ```
 // 1.登录的二维码数据内容
 {
-    CallbackUrl     	String  //授权请求地址
+	CallbackUrl     	String  //授权请求地址
 	ReturnUrl         	String  //授权成功后回调地址
 	Description      	String  //描述
 	AppID               String  //平台授权AppID
