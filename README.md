@@ -61,7 +61,7 @@ AppName=redpacket
  
 
 #### 场景1：使用钱包扫码二维码登录
-> 	适合第三方网站接入。
+> 适合第三方网站接入。
 > 
 > 业务流程图如下：
 
@@ -89,33 +89,36 @@ AppName=redpacket
 ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
 
 //传参
+{
 	privateKey  	String 	//ELA 私钥
 	data  		data 	//密文内容
 	len  		int 	//密文内容长度
 	signedData 	data 	//输出密文
+}
 ```
 
 - 钱包将签名后的数据POST到dapp提供的CallbackUrl，请求登录验证
 ```
- // 请求登录验证的数据格式（最终将下面reqJson数据提交）
- reqJsonData 数据如下：
+// 1.生成请求登录验证的数据格式（最终将下面reqJson数据提交）
+reqJsonData 数据如下：
 {
 	ELAAddress  	String  //ELA地址
  	NickName   	String  //昵称
 }
-                       
+         
+//2.对请求登录验证的数据进行进行签名，发送的CallbackUrl 
 reqJson 数据如下：        
 {
-    Data       	string   // reqJsonData Json字符串
-    Sign    	string   // reqJsonData 数据进行钱包相关数据签名
-    PublicKey  	string   // 公钥
+    	Data       	string   // reqJsonData Json字符串
+    	Sign    	string   // reqJsonData 数据进行钱包相关数据签名
+    	PublicKey  	string   // 公钥
 }
 ```
 - 成功回调ReturnUrl
   
 
 #### 场景2：dapp的移动端应用拉起钱包App，请求登录授权
-> 	适合dapp的移动端(iOS或安卓端）接入。业务流程图如下：
+> 适合dapp的移动端(iOS或安卓端）接入。业务流程图如下：
 
 ![image](images/case-app-login.png)
 - dapp的移动端拉起钱包APP要求登录授权，并传递给钱包App如下的数据，数据格式为json：
