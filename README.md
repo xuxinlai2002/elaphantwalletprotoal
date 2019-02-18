@@ -85,7 +85,7 @@ AppName=redpacket
 
 - 钱包对登录相关数据进行签名
 ```
-利用私钥对AppID加密，函数如下: 
+利用私钥对AppID加密，函数如下(IOS版): 
 ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
 
 //传参
@@ -139,7 +139,7 @@ reqJson 数据如下：
 ```
 - 钱包对登录相关数据进行签名
 ```
-利用私钥对AppID加密，函数如下: 
+利用私钥对AppID加密，函数如下(IOS版): 
 ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
 
 //传参
@@ -197,7 +197,7 @@ reqJson 数据如下：
 ```
 - 钱包对支付相关数据进行签名
 ```
-利用私钥对AppID加密，函数如下: 
+利用私钥对AppID加密，函数如下(IOS版): 
 ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
 
 //传参
@@ -237,7 +237,7 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
 ```
 - 钱包对支付相关数据进行签名
 ```
-利用私钥对AppID加密，函数如下: 
+利用私钥对AppID加密，函数如下(IOS版): 
 ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
 
 //传参
