@@ -210,7 +210,6 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
 ```
 - 钱包组装上述数据，生成一笔Elastos的transaction，用户授权此笔转账后，提交转账数据到Elastos主网；若有callback参数，则进行回调访问
 - dapp可根据callback中的txID去主网查询此笔交易（不能完全依赖此方式来确认用户的付款）；或dapp自行搭建节点监控Elastos主网，检查代币是否到账
-- 对于流行币种，如果二维码中给出的contract名和官方的合约名不一致，钱包方要提醒用户，做二次确认
 - 钱包应该提醒用户注意辨别二维码的来源，避免被钓鱼攻击
 
 
