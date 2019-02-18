@@ -74,10 +74,10 @@ AppName=redpacket
 	CallbackUrl     	String  //授权请求地址
 	ReturnUrl         	String  //授权成功后回调地址
 	Description      	String  //描述
-	AppID               String  //平台授权AppID
+	AppID               	String  //平台授权AppID
 	PublicKey         	String  //公钥
 	Signature        	String  //加密密文
-	DID                 String  //平台DID
+	DID                 	String  //平台DID
 	RandomNumber  		int   	//随机数
 	AppName          	String  //应用名称
 }
@@ -89,7 +89,7 @@ AppName=redpacket
 ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
 
 //传参
-	privateKey  String 	//ELA 私钥
+	privateKey  	String 	//ELA 私钥
 	data  		data 	//密文内容
 	len  		int 	//密文内容长度
 	signedData 	data 	//输出密文
@@ -101,7 +101,7 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
  reqJsonData 数据如下：
 {
 	ELAAddress  	String  //ELA地址
- 	NickName   		String  //昵称
+ 	NickName   	String  //昵称
 }
                        
 reqJson 数据如下：        
@@ -122,15 +122,15 @@ reqJson 数据如下：
 ```
 // dapp传递给钱包APP的数据包结构
 {   
-    CallbackUrl         String  //授权请求地址
-    ReturnUrl           String  //授权成功后回调地址
-	Description         String  //备注描述
-	AppID               String  //平台授权AppID
-	PublicKey           String  //公钥
-	Signature        	String  //加密密文
-	DID                 String  //平台DID
-	RandomNumber  		int   	//随机数
-	AppName          	String  //应用名称
+    	CallbackUrl	String  //授权请求地址
+    	ReturnUrl	String  //授权成功后回调地址
+	Description	String  //备注描述
+	AppID		String  //平台授权AppID
+	PublicKey	String  //公钥
+	Signature	String  //加密密文
+	DID		String  //平台DID
+	RandomNumber	int   	//随机数
+	AppName		String  //应用名称
     		        
 }
 ```
@@ -140,10 +140,12 @@ reqJson 数据如下：
 ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
 
 //传参
-	privateKey  String 	//ELA 私钥
+{
+	privateKey	String 	//ELA 私钥
 	data  		data 	//密文内容
 	len  		int 	//密文内容长度
 	signedData 	data 	//输出密文
+}
 ```
 
 - 钱包将签名后的数据POST到dapp提供的CallbackUrl，请求登录验证
@@ -152,14 +154,14 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
  reqJsonData 数据如下：
 {
 	ELAAddress  	String  //ELA地址
- 	NickName   		String  //昵称
+ 	NickName   	String  //昵称
 }
                        
 reqJson 数据如下：        
 {
-    Data       	string   // reqJsonData Json字符串
-    Sign    	string   // reqJsonData 数据进行钱包相关数据签名
-    PublicKey  	string   // 公钥
+    	Data       	string   // reqJsonData Json字符串
+    	Sign    	string   // reqJsonData 数据进行钱包相关数据签名
+    	PublicKey  	string   // 公钥
 }
 ```
 - dapp server收到数据，验证sign签名数据，返回success == true或false；若验证成功，则在dapp的业务逻辑中，将该用户设为已登录状态
@@ -178,13 +180,13 @@ reqJson 数据如下：
 	AppID			String  //平台授权AppID
 	PublicKey		String  //公钥
 	Signature		String  //加密密文 （加密方式同上）
-	Serialnumber	int     //序号    
-	DID				String  //平台DID
-	RandomNumber	int   	//随机数
+	Serialnumber		int     //序号    
+	DID			String  //平台DID
+	RandomNumber		int   	//随机数
 	Name			String  //应用名称
 	CoinName		String 	//币种类
 	Amount			int  	//币数量
-	PaymentAddress	String 	//付款地址
+	PaymentAddress		String 	//付款地址
 }
 ```
 - 钱包对支付相关数据进行签名
@@ -193,7 +195,7 @@ reqJson 数据如下：
 ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
 
 //传参
-	privateKey  String 	//ELA 私钥
+	privateKey  	String 	//ELA 私钥
 	data  		data 	//密文内容
 	len  		int 	//密文内容长度
 	signedData 	data 	//输出密文
@@ -216,13 +218,13 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
 	AppID			String  //平台授权AppID
 	PublicKey		String  //公钥
 	Signature		String  //加密密文 （加密方式同上）
-	Serialnumber	int     //序号
-	DID				String  //平台DID
-	RandomNumber	int   	//随机数
+	Serialnumber		int     //序号
+	DID			String  //平台DID
+	RandomNumber		int   	//随机数
 	Name			String  //应用名称
 	CoinName		String 	//币种类
 	Amount			int  	//币数量
-	PaymentAddress	String 	//付款地址
+	PaymentAddress		String 	//付款地址
 }
 ```
 - 钱包对支付相关数据进行签名
@@ -231,7 +233,7 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
 ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.count, signedData: &signedData)
 
 //传参
-	privateKey  String 	//ELA 私钥
+	privateKey  	String 	//ELA 私钥
 	data  		data 	//密文内容
 	len  		int 	//密文内容长度
 	signedData 	data 	//输出密文
