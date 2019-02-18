@@ -134,7 +134,6 @@ reqJson 数据如下：
 	DID			String  //平台DID
 	RandomNumber		int   	//随机数
 	AppName			String  //应用名称
-    		        
 }
 ```
 - 钱包对登录相关数据进行签名
@@ -148,7 +147,6 @@ ElastosWalletKit.Sign(privateKey: elaPrivKey, data: testData!, len: testData.cou
 	data  			data 	//待签名内容
 	len  			int 	//待签名内容长度
 	signedData 		data 	//签名输出
-
 }
 ```
 
