@@ -65,15 +65,7 @@ AppName=redpacket
 > 
 > 业务流程图如下：
 
-<p align="center">
-    <img src="images/case1.png" alt="Sample"  width="250" height="140">
-    <p align="center">
-        <em>图片示例2</em>
-    </p>
-</p>
-
-![image](images/case1.png)
-
+![image](images/case-barcode-login.png)
 
 - dapp生成二维码，钱包扫描dapp web提供的登录二维码，此二维码的数据格式为json，包含以下数据：
 ```
